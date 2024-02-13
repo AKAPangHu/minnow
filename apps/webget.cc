@@ -13,23 +13,15 @@ void get_URL( const string& host, const string& path )
                      + "Host: " + host + "\r\n"
                      + "Connection: close"
                      "\r\n\r\n";
-    cout << request << "\n";
-
     TCPSocket socket {};
     socket.connect( Address( host, "http" ) );
     socket.write( request );
-
-    int c = 0;
     while (  !socket.eof() ) {
-      cout << c++;
       string response;
       socket.read( response );
       cout << response;
     }
-
-    cout << "Done\n";
     socket.close();
-    cout << "Closed\n";
 }
 
 int main( int argc, char* argv[] )
