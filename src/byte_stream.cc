@@ -39,7 +39,7 @@ uint64_t Writer::bytes_pushed() const
 
 bool Reader::is_finished() const
 {
-  return finished_;
+  return closed_ && buffer_.empty();
 }
 
 uint64_t Reader::bytes_popped() const

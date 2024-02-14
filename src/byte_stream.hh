@@ -26,7 +26,6 @@ public:
 protected:
   // Please add any additional state to the ByteStream here, and not to the Writer and Reader interfaces.
   bool closed_ = false;
-  bool finished_ = false;
   uint64_t capacity_;
   bool error_ {};
   std::deque<char> buffer_ = {};
