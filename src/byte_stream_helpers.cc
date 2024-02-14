@@ -2,6 +2,10 @@
 
 #include <cstdint>
 #include <stdexcept>
+#include <string>
+
+
+using namespace std;
 
 /*
  * read: A helper function thats peeks and pops up to `len` bytes
@@ -12,6 +16,7 @@ void read( Reader& reader, uint64_t len, std::string& out )
   out.clear();
 
   while ( reader.bytes_buffered() and out.size() < len ) {
+
     auto view = reader.peek();
 
     if ( view.empty() ) {
