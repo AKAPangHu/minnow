@@ -50,7 +50,9 @@ void Reassembler::findAndInsertIntoBuffer( uint64_t first_index, string&& data )
 
 void Reassembler::checkAndWriteBuffer()
 {
-  while ( next_index_ == buffer_.front().index_ ) {
+
+
+  while ( !buffer_.empty() && (next_index_ == buffer_.front().index_ )) {
     output_.writer().push( buffer_.front().data_ );
     next_index_ += buffer_.front().data_.size();
     buffer_.pop_front();

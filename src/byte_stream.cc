@@ -10,7 +10,6 @@ bool Writer::is_closed() const
 
 void Writer::push( const string& data )
 {
-  cout << "push data: " << data << endl;
   if ( data.empty() ) {
     return;
   }
