@@ -4,8 +4,6 @@ using namespace std;
 
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring )
 {
-  if (  )
-
 
   // 校验是否应该写入数据（front_index == now_front_bound）
   if ( next_index_ == first_index ) {
