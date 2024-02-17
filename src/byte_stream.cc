@@ -1,4 +1,5 @@
 #include "byte_stream.hh"
+#include <iostream>
 
 using namespace std;
 
@@ -9,6 +10,7 @@ bool Writer::is_closed() const
 
 void Writer::push( const string& data )
 {
+  cout << "push data: " << data << endl;
   if ( data.empty() ) {
     return;
   }
