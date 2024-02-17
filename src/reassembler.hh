@@ -60,5 +60,6 @@ private:
 
   void findAndInsertIntoBuffer( uint64_t first_index, std::string&& data );
   void checkAndWriteBuffer();
+  uint64_t getRealPushSize( const std::string& data );
 };
 

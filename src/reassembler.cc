@@ -7,11 +7,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   // 校验是否应该写入数据（front_index == now_front_bound）
   if ( next_index_ == first_index ) {
     output_.writer().push( data );
-
-    uint64_t real_push_size
-      = data.size() > output_.writer().available_capacity() ? output_.writer().available_capacity() : data.size();
-    next_index_ += real_push_size;
-
+    next_index_ += getRealPushSize( data );
     checkAndWriteBuffer();
   } else if ( next_index_ < first_index ) {
     findAndInsertIntoBuffer( first_index, std::move( data ) );
@@ -26,6 +22,12 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   // 1、刚好在上面写入完数据，bound向后推移。循环遍历缓冲区，直到不符合顺序为止。
 
   // delete:引入竞争条件，需要一个简单的锁，保证不重复发送相同的数据包。
+}
+uint64_t Reassembler::getRealPushSize( const string& data )
+{
+  uint64_t real_push_size
+      = data.size() > output_.writer().available_capacity() ? output_.writer().available_capacity() : data.size();
+  return real_push_size;
 }
 void Reassembler::findAndInsertIntoBuffer( uint64_t first_index, string&& data )
 { // 顺序查找位置，如果重复，则丢弃数据
@@ -55,7 +57,7 @@ void Reassembler::checkAndWriteBuffer()
 {
   while ( !buffer_.empty() && ( next_index_ == buffer_.front().index_ ) ) {
     output_.writer().push( buffer_.front().data_ );
-    next_index_ += buffer_.front().data_.size();
+    next_index_ += getRealPushSize( buffer_.front().data_ );
     buffer_.pop_front();
   }
 }
