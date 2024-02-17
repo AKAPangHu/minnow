@@ -2,8 +2,6 @@
 
 using namespace std;
 
-ByteStream::ByteStream( uint64_t capacity ) : capacity_( capacity ) {}
-
 bool Writer::is_closed() const
 {
   return closed_;
