@@ -1,6 +1,18 @@
 #pragma once
 
 #include "byte_stream.hh"
+#include <list>
+#include <utility>
+
+//缓冲区应该自带index，并且是去重的。使用链表，数据结构为一个对象，存放着一个substr和index
+class BufferItem {
+public:
+  BufferItem(uint64_t index, std::string data) : index_(index), data_(std::move(data)) {}
+  uint64_t index_;
+  std::string data_;
+};
+
+
 
 class Reassembler
 {
@@ -40,6 +52,13 @@ public:
   // Access output stream writer, but const-only (can't write from outside)
   const Writer& writer() const { return output_.writer(); }
 
+
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
+  uint64_t next_index_ = 0; // the index of the next byte to be written
+  std::list<BufferItem> buffer_; // the buffer to store pending bytes
+
+  void findAndInsertIntoBuffer( uint64_t first_index, std::string&& data );
+  void checkAndWriteBuffer();
 };
+
