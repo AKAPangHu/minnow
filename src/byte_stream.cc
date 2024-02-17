@@ -8,7 +8,7 @@ bool Writer::is_closed() const
   return closed_;
 }
 
-void Writer::push( const string data )
+void Writer::push( const string& data )
 {
   cout << "push data: " << data << endl;
   if ( data.empty() ) {
