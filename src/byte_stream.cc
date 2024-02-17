@@ -9,6 +9,10 @@ bool Writer::is_closed() const
 
 void Writer::push( const string& data )
 {
+  if ( data.empty() ) {
+    return;
+  }
+
   for ( auto c : data ) {
     if ( buffer_.size() >= capacity_ ) {
       return;
