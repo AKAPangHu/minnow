@@ -7,7 +7,7 @@ bool Writer::is_closed() const
   return closed_;
 }
 
-void Writer::push( string data )
+void Writer::push( const string& data )
 {
   for ( auto c : data ) {
     if ( buffer_.size() >= capacity_ ) {
