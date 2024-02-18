@@ -29,7 +29,8 @@ void Reassembler::insert_into_internal( uint64_t first_index, const string& data
 {
   uint64_t index = first_index;
   for ( const auto& item : data ){
-    internal_storage[ index++ ] = item;
+    internal_storage[ index ] = item;
+    index++;
   }
 }
 
@@ -39,7 +40,8 @@ void Reassembler::check_and_write_from_internal()
 
   while (internal_storage.find(next_index_) != internal_storage.end()) {
     data.append(1, internal_storage[next_index_]);
-    internal_storage.erase(next_index_++);
+    internal_storage.erase(next_index_);
+    next_index_++;
   }
 
   push_to_writer_stream(data);
@@ -61,7 +63,6 @@ void Reassembler::push_to_writer_stream( const string& data )
     return;
   }
 
-  next_index_ += data.size();
   output_.writer().push( data );
 }
 
