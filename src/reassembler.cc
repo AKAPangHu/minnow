@@ -5,64 +5,67 @@ using namespace std;
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring )
 {
   // 校验是否应该写入数据（front_index == now_front_bound）
-  if ( next_index_ == first_index ) {
-    next_index_ += getRealPushSize( data );
-    output_.writer().push( data );
-    checkAndWriteBuffer();
-  } else if ( next_index_ < first_index ) {
-    findAndInsertIntoBuffer( first_index, std::move( data ) );
-  } else {
-    // 丢弃数据
+  uint64_t end_index = first_index + data.size() - 1;
+
+  // 丢弃数据
+  if ( end_index < next_index_ ) {
+    return;
   }
+
+  if ( beyond_capacity( first_index, data ) ) {
+    data = data.substr( 0, next_index_ + output_.writer().available_capacity() - first_index);
+  }
+
+  insert_into_internal( first_index, data );
+  check_and_write_from_internal();
 
   if ( is_last_substring ) {
     output_.writer().close();
   }
-  // 读取缓冲区的时机：
-  // 1、刚好在上面写入完数据，bound向后推移。循环遍历缓冲区，直到不符合顺序为止。
 
-  // delete:引入竞争条件，需要一个简单的锁，保证不重复发送相同的数据包。
 }
-uint64_t Reassembler::getRealPushSize( const string& data )
+
+void Reassembler::insert_into_internal( uint64_t first_index, const string& data )
 {
-  uint64_t real_push_size
-      = data.size() > output_.writer().available_capacity() ? output_.writer().available_capacity() : data.size();
-  return real_push_size;
-}
-void Reassembler::findAndInsertIntoBuffer( uint64_t first_index, string&& data )
-{ // 顺序查找位置，如果重复，则丢弃数据
-  BufferItem item( first_index, data );
-  bool inserted = false;
-
-  for ( auto it = buffer_.begin(); it != buffer_.end(); ++it ) {
-    if ( it->index_ == first_index ) {
-      inserted = true;
-      continue;
-    }
-
-    if ( it->index_ > first_index ) {
-      buffer_.insert( it, item );
-      inserted = true;
-      break;
-    }
-  }
-
-  // 如果没有找到合适的位置，则代表缓冲区为空，或者index是最大的。插入到末尾。
-  if ( !inserted ) {
-    buffer_.push_back( item );
+  uint64_t index = first_index;
+  for ( const auto& item : data ){
+    internal_storage[ index++ ] = item;
   }
 }
 
-void Reassembler::checkAndWriteBuffer()
+void Reassembler::check_and_write_from_internal()
 {
-  while ( !buffer_.empty() && ( next_index_ == buffer_.front().index_ ) ) {
-    next_index_ += getRealPushSize( buffer_.front().data_ );
-    output_.writer().push( buffer_.front().data_ );
-    buffer_.pop_front();
+  string data;
+
+  while (internal_storage.find(next_index_) != internal_storage.end()) {
+    data.append(1, internal_storage[next_index_]);
+    internal_storage.erase(next_index_++);
   }
+
+  push_to_writer_stream(data);
+}
+
+
+bool Reassembler::beyond_capacity( uint64_t first_index, const string& data )
+{
+  uint64_t end_index = first_index + data.size() - 1;
+  if ( end_index > next_index_ + output_.writer().available_capacity() ) {
+    return true;
+  }
+  return false;
+}
+
+void Reassembler::push_to_writer_stream( const string& data )
+{
+  if ( data.empty() ) {
+    return;
+  }
+
+  next_index_ += data.size();
+  output_.writer().push( data );
 }
 
 uint64_t Reassembler::bytes_pending() const
 {
-  return buffer_.size();
+  return internal_storage.size();
 }
