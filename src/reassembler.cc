@@ -6,8 +6,8 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
 {
   // 校验是否应该写入数据（front_index == now_front_bound）
   if ( next_index_ == first_index ) {
-    output_.writer().push( data );
     next_index_ += getRealPushSize( data );
+    output_.writer().push( data );
     checkAndWriteBuffer();
   } else if ( next_index_ < first_index ) {
     findAndInsertIntoBuffer( first_index, std::move( data ) );
@@ -56,8 +56,8 @@ void Reassembler::findAndInsertIntoBuffer( uint64_t first_index, string&& data )
 void Reassembler::checkAndWriteBuffer()
 {
   while ( !buffer_.empty() && ( next_index_ == buffer_.front().index_ ) ) {
-    output_.writer().push( buffer_.front().data_ );
     next_index_ += getRealPushSize( buffer_.front().data_ );
+    output_.writer().push( buffer_.front().data_ );
     buffer_.pop_front();
   }
 }
