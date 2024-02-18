@@ -12,6 +12,12 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     return;
   }
 
+  //重叠部分处理
+  if ( first_index < next_index_ && end_index >= next_index_ ) {
+    data = data.substr( next_index_ - first_index );
+    first_index = next_index_;
+  }
+
   if ( beyond_capacity( first_index, data ) ) {
     data = data.substr( 0, next_index_ + output_.writer().available_capacity() - first_index);
   }
@@ -51,7 +57,7 @@ void Reassembler::check_and_write_from_internal()
 bool Reassembler::beyond_capacity( uint64_t first_index, const string& data )
 {
   uint64_t end_index = first_index + data.size() - 1;
-  if ( end_index > next_index_ + output_.writer().available_capacity() ) {
+  if ( end_index >= next_index_ + output_.writer().available_capacity() ) {
     return true;
   }
   return false;
