@@ -1,8 +1,15 @@
 #include "reassembler.hh"
-#include <cassert>
 
 using namespace std;
 
+/**
+ * 实现的基本思路：
+ * 1. 检查是否有立即结束流的数据，如果有则直接结束流。
+ * 2. 检查是否超出容量，如果有则截断。
+ * 3. 检查是否有重叠，如果有则截断
+ * 4. 检查是否可以立即发送，如果有则立即发送。（同时清理内存 + 检查内存后边的数据）
+ * 5. 不能立即发送则代表需要缓存，将数据插入到内部存储中。
+ */
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring )
 {
 
@@ -44,7 +51,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     }
   }
 
-  assert( first_index >= next_index_ );
+  // 如果是符合条件的应该立即发送
   if ( first_index == next_index_ ) {
     push_to_writer_stream( data, is_last_substring );
     next_index_ += data.size();
