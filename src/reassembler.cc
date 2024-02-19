@@ -7,8 +7,8 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   // 校验是否应该写入数据（front_index == now_front_bound）
   uint64_t end_index = first_index + data.size() - 1;
 
-  // 丢弃数据
-  if ( end_index < next_index_ ) {
+  // 丢弃数据 (不能丢弃空串，因为可能是最后一个子串的情况)
+  if ( !data.empty() && end_index < next_index_ ) {
     return;
   }
 
