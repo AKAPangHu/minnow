@@ -48,10 +48,12 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   if ( first_index == next_index_ ) {
     push_to_writer_stream( data, is_last_substring );
     next_index_ += data.size();
+    erase_if(internal_storage, [this]( const auto& item ) { return item.first < next_index_; } );
     check_and_write_from_internal();
   } else {
     insert_into_internal( first_index, data );
   }
+
 }
 
 void Reassembler::insert_into_internal( uint64_t first_index, const string& data )
