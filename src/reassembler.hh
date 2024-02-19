@@ -47,7 +47,7 @@ private:
   ByteStream output_;                                     // the Reassembler writes to this ByteStream
   uint64_t next_index_ = 0;                               // the index of the next byte to be written
   std::unordered_map<uint64_t, char> internal_storage {}; // the buffer to store pending bytes
-  uint64_t last_index = -1;                            // the number of bytes stored in internal_storage
+  uint64_t last_index = INT64_MAX;
 
   void insert_into_internal( uint64_t first_index, const std::string& data );
   void check_and_write_from_internal();
