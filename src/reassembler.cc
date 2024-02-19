@@ -50,7 +50,11 @@ void Reassembler::check_and_write_from_internal()
     next_index_++;
   }
 
-  bool is_last_substring = ( next_index_ > last_index );
+  // last_index初始化的值为-1，所以：
+  // 1、如果next_index = last_index，说明最后一个子串的位置是空，已经读取完毕。
+  // 2、如果next_index > last_index，说明最后一个子串的位置非空，已经读取完毕。
+
+  bool is_last_substring = ( next_index_ >= last_index );
   push_to_writer_stream( data, is_last_substring);
 }
 
