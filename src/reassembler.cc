@@ -1,21 +1,22 @@
 #include "reassembler.hh"
+#include <cassert>
 
 using namespace std;
 
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring )
 {
 
-  //恰好是准备结束的最后一个字符串（防止超出无符号整形范围）
-  if ( is_last_substring && data.empty() && first_index == next_index_) {
+  // 恰好是准备结束的最后一个字符串（防止超出无符号整形范围）
+  if ( is_last_substring && data.empty() && first_index == next_index_ ) {
     push_to_writer_stream( data, is_last_substring );
     return;
   }
 
   uint64_t end_index;
 
-  if (data.empty()){
+  if ( data.empty() ) {
     end_index = first_index;
-  } else{
+  } else {
     end_index = first_index + data.size() - 1;
   }
 
@@ -43,9 +44,14 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     }
   }
 
-
-  insert_into_internal( first_index, data );
-  check_and_write_from_internal();
+  assert( first_index >= next_index_ );
+  if ( first_index == next_index_ ) {
+    push_to_writer_stream( data, is_last_substring );
+    next_index_ += data.size();
+    check_and_write_from_internal();
+  } else {
+    insert_into_internal( first_index, data );
+  }
 }
 
 void Reassembler::insert_into_internal( uint64_t first_index, const string& data )
