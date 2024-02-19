@@ -48,12 +48,18 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   if ( first_index == next_index_ ) {
     push_to_writer_stream( data, is_last_substring );
     next_index_ += data.size();
-    erase_if(internal_storage, [this]( const auto& item ) { return item.first < next_index_; } );
+    erase_between( first_index, next_index_ );
     check_and_write_from_internal();
   } else {
     insert_into_internal( first_index, data );
   }
+}
 
+void Reassembler::erase_between( uint64_t first_index, uint64_t next_index )
+{
+  for ( uint64_t i = first_index; i < next_index; i++ ) {
+    internal_storage.erase( i );
+  }
 }
 
 void Reassembler::insert_into_internal( uint64_t first_index, const string& data )

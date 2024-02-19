@@ -54,4 +54,6 @@ private:
 
   void push_to_writer_stream( const std::string& data, bool is_last_substring );
   bool beyond_capacity( uint64_t end_index );
+
+  void erase_between( uint64_t first_index, uint64_t next_index );
 };
