@@ -26,7 +26,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     if ( data.empty() ) {
       last_index = first_index;
     } else {
-      last_index = end_index;
+      last_index = first_index + data.size() - 1;
     }
   }
 
