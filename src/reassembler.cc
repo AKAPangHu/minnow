@@ -69,11 +69,9 @@ bool Reassembler::beyond_capacity( uint64_t first_index, const string& data )
 
 void Reassembler::push_to_writer_stream( const string& data, bool is_last_substring )
 {
-  if ( data.empty() ) {
-    return;
+  if ( !data.empty() ) {
+    output_.writer().push( data );
   }
-
-  output_.writer().push( data );
 
   if ( is_last_substring ) {
     output_.writer().close();
