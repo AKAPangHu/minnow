@@ -4,11 +4,23 @@ using namespace std;
 
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring )
 {
-  // 校验是否应该写入数据（front_index == now_front_bound）
-  uint64_t end_index = first_index + data.size() - 1;
 
-  // 丢弃数据 (不能丢弃空串，因为可能是最后一个子串的情况)
-  if ( !data.empty() && end_index < next_index_ ) {
+  //恰好是准备结束的最后一个字符串（防止超出无符号整形范围）
+  if ( is_last_substring && data.empty() && first_index == next_index_) {
+    push_to_writer_stream( data, is_last_substring );
+    return;
+  }
+
+  uint64_t end_index;
+
+  if (data.empty()){
+    end_index = first_index;
+  } else{
+    end_index = first_index + data.size() - 1;
+  }
+
+  // 抛弃已经接收到的部分
+  if ( end_index < next_index_ ) {
     return;
   }
 
@@ -18,7 +30,8 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     first_index = next_index_;
   }
 
-  if ( beyond_capacity( first_index, data ) ) {
+  // 超出容量处理
+  if ( beyond_capacity( end_index ) ) {
     data = data.substr( 0, next_index_ + output_.writer().available_capacity() - first_index );
   }
 
@@ -29,6 +42,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
       last_index = end_index;
     }
   }
+
 
   insert_into_internal( first_index, data );
   check_and_write_from_internal();
@@ -57,9 +71,8 @@ void Reassembler::check_and_write_from_internal()
   push_to_writer_stream( data, is_last_substring );
 }
 
-bool Reassembler::beyond_capacity( uint64_t first_index, const string& data )
+bool Reassembler::beyond_capacity( uint64_t end_index )
 {
-  uint64_t end_index = first_index + data.size() - 1;
   if ( end_index >= next_index_ + output_.writer().available_capacity() ) {
     return true;
   }

@@ -53,5 +53,5 @@ private:
   void check_and_write_from_internal();
 
   void push_to_writer_stream( const std::string& data, bool is_last_substring );
-  bool beyond_capacity( uint64_t first_index, const std::string& data );
+  bool beyond_capacity( uint64_t end_index );
 };
