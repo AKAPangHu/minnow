@@ -22,12 +22,13 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     data = data.substr( 0, next_index_ + output_.writer().available_capacity() - first_index );
   }
 
-  insert_into_internal( first_index, data );
-  check_and_write_from_internal();
-
   if ( is_last_substring ) {
     last_index = end_index;
   }
+
+  insert_into_internal( first_index, data );
+  check_and_write_from_internal();
+
 }
 
 void Reassembler::insert_into_internal( uint64_t first_index, const string& data )
