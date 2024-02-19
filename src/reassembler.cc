@@ -23,12 +23,15 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   }
 
   if ( is_last_substring ) {
-    last_index = end_index;
+    if ( data.empty() ) {
+      last_index = first_index;
+    } else {
+      last_index = end_index;
+    }
   }
 
   insert_into_internal( first_index, data );
   check_and_write_from_internal();
-
 }
 
 void Reassembler::insert_into_internal( uint64_t first_index, const string& data )
@@ -55,7 +58,7 @@ void Reassembler::check_and_write_from_internal()
   // 2、如果next_index > last_index，说明最后一个子串的位置非空，已经读取完毕。
 
   bool is_last_substring = ( next_index_ >= last_index );
-  push_to_writer_stream( data, is_last_substring);
+  push_to_writer_stream( data, is_last_substring );
 }
 
 bool Reassembler::beyond_capacity( uint64_t first_index, const string& data )
