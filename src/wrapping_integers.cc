@@ -1,4 +1,5 @@
 #include "wrapping_integers.hh"
+#include <cstdint>
 
 
 using namespace std;
@@ -30,7 +31,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
   //
   // 1.如果offset + 0 > 二分之一循环最大值，这样的值不可能在A+1循环中离上一个checkpoint点是最近的。所以可以反向证明出来不符合条件的值属于上一循环。
   // 2.第一个循环不适用上一规则
-  if ( offset >= ( 1ULL << 31 ) && checkpoint >= ( 1ULL << 32 ) ) {
+  if ( offset >= ( 1ULL << 31 ) && checkpoint >= ( UINT32_MAX ) ) {
     r -= ( 1ULL << 32 );
   }
 
