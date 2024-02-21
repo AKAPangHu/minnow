@@ -20,7 +20,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
   if ( raw_value_ >= zero_point.raw_value_ ) {
     offset =  raw_value_ - zero_point.raw_value_;
   } else {
-    offset = ( 1ULL << 32 ) + raw_value_ - zero_point.raw_value_;
+    offset = ( UINT32_MAX ) - (zero_point.raw_value_ - raw_value_);
   }
 
   //增加checkpoint的值
