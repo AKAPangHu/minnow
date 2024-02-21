@@ -10,5 +10,9 @@ Wrap32 Wrap32::wrap( uint64_t n, Wrap32 zero_point )
 
 uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
 {
-  return checkpoint + raw_value_ - zero_point.raw_value_;
+  if (raw_value_ >= zero_point.raw_value_) {
+    return checkpoint + raw_value_ - zero_point.raw_value_;
+  }
+
+  return checkpoint + (1ULL << 32) + raw_value_ - zero_point.raw_value_;
 }
