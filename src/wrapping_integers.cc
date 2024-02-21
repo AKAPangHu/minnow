@@ -1,5 +1,6 @@
 #include "wrapping_integers.hh"
 
+
 using namespace std;
 
 Wrap32 Wrap32::wrap( uint64_t n, Wrap32 zero_point )
@@ -27,7 +28,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
   //
   // 1.有可能在checkpoint之前，所以要检验一下在checkpoint左边还是在右边，选择差值比较小的。
   // 2.在第一个checkpoint边界到达之前，没有左边
-  if ( raw_value_ >= ( 1ULL << 31 ) && checkpoint >= ( 1ULL << 32 ) ) {
+  if ( raw_value_ >= ( 1ULL << 31 ) && r >= ( 1ULL << 32 ) ) {
     r -= ( 1ULL << 32 );
   }
 
