@@ -18,9 +18,9 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
 
   //计算出offset。因为绝对值必然是新值在后，zero值在前。所以差值固定。
   if ( raw_value_ >= zero_point.raw_value_ ) {
-    offset = checkpoint + raw_value_ - zero_point.raw_value_;
+    offset =  raw_value_ - zero_point.raw_value_;
   } else {
-    offset = checkpoint + ( 1ULL << 32 ) + raw_value_ - zero_point.raw_value_;
+    offset = ( 1ULL << 32 ) + raw_value_ - zero_point.raw_value_;
   }
 
   //增加checkpoint的值
