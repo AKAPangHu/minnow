@@ -9,6 +9,18 @@ Wrap32 Wrap32::wrap( uint64_t n, Wrap32 zero_point )
 
 uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
 {
+  //-1代表在checkpoint之前，1代表在checkpoint之后
+
+  int belong;
+
+  if ( raw_value_ > ( 2 << 17 ) ) {
+    belong = -1;
+  } else if ( raw_value_ < ( 2 << 17 ) ) {
+    belong = 1;
+  } else {
+    belong = 0;
+  }
+
   uint64_t r;
   if ( raw_value_ >= zero_point.raw_value_ ) {
     r = checkpoint + raw_value_ - zero_point.raw_value_;
@@ -18,13 +30,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
 
   if ( checkpoint == 0 ) {
     return r;
-  }
-
-  if ( r == checkpoint ) {
-    return r;
-  } else if ( r > checkpoint ) {
-    return r + 1;
   } else {
-    return r - 1;
+    return r + belong;
   }
 }
