@@ -31,5 +31,5 @@ public:
 
 protected:
   uint32_t raw_value_ {};
-
+  static uint64_t getAbs( uint64_t a1, uint64_t a2 ) ;
 };
