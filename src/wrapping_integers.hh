@@ -31,5 +31,6 @@ public:
 
 protected:
   uint32_t raw_value_ {};
-  static uint64_t getAbs( uint64_t a1, uint64_t a2 ) ;
+  static uint32_t getRelativeDistance( uint32_t a1, uint32_t a2 ) ;
+  static uint64_t getAbs( uint64_t a1, uint64_t a2 );
 };
