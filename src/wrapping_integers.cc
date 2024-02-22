@@ -17,7 +17,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
   // 计算出offset。因为绝对值必然是新值在后，zero值在前。所以相对值的差值固定。
   offset = getAbs( zero_point.raw_value_, raw_value_ );
 
-  uint64_t cycle_base = ( checkpoint / 1ULL << 32 ) * ( 1ULL << 32 );
+  uint64_t cycle_base = ( checkpoint / (1ULL << 32) ) * ( 1ULL << 32 );
   r = offset + cycle_base * ( 1ULL << 32 );
 
   if ( getAbs(r, checkpoint) >= ( 1ULL << 31 ) ) {
