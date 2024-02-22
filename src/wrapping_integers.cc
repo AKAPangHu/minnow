@@ -20,7 +20,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
   uint64_t cycle_base = ( checkpoint / (1ULL << 32) ) * ( 1ULL << 32 );
   r = offset + cycle_base * ( 1ULL << 32 );
 
-  if ( getAbs(r, checkpoint) >= ( 1ULL << 31 ) ) {
+  if ( getAbs(r, checkpoint - cycle_base) >= ( 1ULL << 31 ) ) {
     r += ( 1ULL << 32 );
   }
 
