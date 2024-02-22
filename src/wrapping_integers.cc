@@ -20,6 +20,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
   if ( raw_value_ >= zero_point.raw_value_ ) {
     offset =  raw_value_ - zero_point.raw_value_;
   } else {
+    //因为是一个循环，所以计算值时要谨慎
     offset = ( UINT32_MAX + 1) - (zero_point.raw_value_ - raw_value_);
   }
 
