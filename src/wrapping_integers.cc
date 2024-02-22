@@ -18,7 +18,7 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
   offset = getAbs( zero_point.raw_value_, raw_value_ );
 
   uint64_t cycle_base = ( checkpoint / (1ULL << 32) ) * ( 1ULL << 32 );
-  r = offset + cycle_base * ( 1ULL << 32 );
+  r = offset + cycle_base;
 
   // 如果offset大于等于2^31，那么r需要加上2^32
   if ( getAbs(offset, checkpoint - cycle_base) >= ( 1ULL << 31 ) ) {
