@@ -28,7 +28,7 @@ public:
 
 private:
   Reassembler reassembler_;
-  std::optional<Wrap32> syn_seqno_;
-  bool fin_flag_;
+  std::optional<Wrap32> syn_seqno_ {};
+  bool fin_flag_ = false;
   uint64_t received_byte_ = 0;
 };
