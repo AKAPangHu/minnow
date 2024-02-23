@@ -36,14 +36,6 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
     return r3;
   }
 
-  return r1 - checkpoint < r2 - checkpoint ? r1 : r2;
-
-  //  // 比较相对位置。看看计算的循环起始位置正不正确。如果offset大于等于2^31，则证明在下一循环中，那么r需要加上2^32
-  //  if ( getRelativeDistance(offset, checkpoint - cycle_base) >= ( 1ULL << 31 ) ) {
-  //    r += ( 1ULL << 32 );
-  //  }
-  //
-  //  return r;
 }
 
 uint32_t Wrap32::getRelativeDistance( uint32_t a1, uint32_t a2 )
