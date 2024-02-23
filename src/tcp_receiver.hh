@@ -3,6 +3,7 @@
 #include "reassembler.hh"
 #include "tcp_receiver_message.hh"
 #include "tcp_sender_message.hh"
+#include <optional>
 
 class TCPReceiver
 {
@@ -27,4 +28,7 @@ public:
 
 private:
   Reassembler reassembler_;
+  std::optional<Wrap32> syn_seqno_;
+  bool fin_flag_;
+  uint64_t received_byte_ = 0;
 };
