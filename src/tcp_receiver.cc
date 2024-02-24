@@ -22,7 +22,7 @@ void TCPReceiver::receive( TCPSenderMessage message )
 
 
 //  reassembler_.insert( message.seqno.unwrap( syn_seqno_.value(), received_byte_ ), message.payload, message.FIN );
-  auto distance = message.seqno - syn_seqno_.value();
+  Wrap32 distance = message.seqno - syn_seqno_.value();
   reassembler_.insert(  distance.unwrap( syn_seqno_.value(), received_byte_ ), message.payload, message.FIN );
   received_byte_ += message.sequence_length();
 }
