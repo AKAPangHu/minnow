@@ -20,10 +20,8 @@ void TCPReceiver::receive( TCPSenderMessage message )
     fin_flag_ = true;
   }
 
-
-//  reassembler_.insert( message.seqno.unwrap( syn_seqno_.value(), received_byte_ ), message.payload, message.FIN );
-  Wrap32 distance = message.seqno - syn_seqno_.value();
-  reassembler_.insert(  distance.unwrap( syn_seqno_.value(), received_byte_ ), message.payload, message.FIN );
+  uint64_t now_u64_t = message.seqno.unwrap( syn_seqno_.value(), received_byte_ );
+  reassembler_.insert( now_u64_t, message.payload, message.FIN );
   received_byte_ += message.sequence_length();
 }
 
