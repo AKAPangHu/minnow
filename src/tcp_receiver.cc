@@ -7,10 +7,6 @@ using namespace std;
 void TCPReceiver::receive( TCPSenderMessage message )
 {
 
-  if ( message.seqno.unwrap(syn_seqno_.value(), received_byte_ ) < last_ackno_ ){
-    return;
-  }
-
   if ( message.SYN ) {
     syn_seqno_ = message.seqno;
   }
@@ -29,14 +25,10 @@ void TCPReceiver::receive( TCPSenderMessage message )
   received_byte_ += message.sequence_length();
 }
 
-TCPReceiverMessage TCPReceiver::send()
+TCPReceiverMessage TCPReceiver::send() const
 {
 
   uint64_t ack_no = syn_seqno_.has_value() + reader().bytes_popped() + reader().bytes_buffered() + fin_flag_;
-
-  if ( ack_no > last_ackno_ ) {
-    last_ackno_ = ack_no;
-  }
 
   return { TCPReceiverMessage {
     syn_seqno_.has_value() ? make_optional<>( Wrap32::wrap( ack_no, syn_seqno_.value() ) ) : nullopt,
