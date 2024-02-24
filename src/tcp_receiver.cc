@@ -11,14 +11,15 @@ void TCPReceiver::receive( TCPSenderMessage message )
     syn_seqno_ = message.seqno;
   }
 
-  if ( message.FIN ) {
-    fin_flag_ = true;
-  }
-
   if ( !syn_seqno_.has_value() ) {
     rst_flag_ = true;
     return;
   };
+
+  if ( message.FIN ) {
+    fin_flag_ = true;
+  }
+
 
   reassembler_.insert( message.seqno.unwrap( syn_seqno_.value(), received_byte_ ), message.payload, message.FIN );
   received_byte_ += message.sequence_length();
