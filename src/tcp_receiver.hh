@@ -18,7 +18,7 @@ public:
   void receive( TCPSenderMessage message );
 
   // The TCPReceiver sends TCPReceiverMessages to the peer's TCPSender.
-  TCPReceiverMessage send() const;
+  TCPReceiverMessage send();
 
   // Access the output (only Reader is accessible non-const)
   const Reassembler& reassembler() const { return reassembler_; }
@@ -32,4 +32,5 @@ private:
   bool fin_flag_ = false;
   bool rst_flag_ = false;
   uint64_t received_byte_ = 0;
+  uint64_t last_ackno_ = 0;
 };
