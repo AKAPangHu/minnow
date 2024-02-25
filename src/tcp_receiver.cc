@@ -20,13 +20,9 @@ void TCPReceiver::receive( TCPSenderMessage message )
   uint64_t seqno_u64_t = message.seqno.unwrap( syn_seqno_.value(), calculate_ackno() );
 
   if ( !message.SYN ) {
-    if ( message.seqno == syn_seqno_ ) {
+    if ( seqno_u64_t == 0 ) {
       return;
     }
-  }
-
-  if ( message.FIN ) {
-    fin_flag_ = true;
   }
 
   reassembler_.insert( seqno_u64_t == 0 ? 0 : seqno_u64_t - 1, message.payload, message.FIN );
@@ -49,6 +45,6 @@ uint64_t TCPReceiver::calculate_window_size() const
 
 uint64_t TCPReceiver::calculate_ackno() const
 {
-  uint64_t ack_no = syn_seqno_.has_value() + reader().bytes_popped() + reader().bytes_buffered() + fin_flag_;
+  uint64_t ack_no = syn_seqno_.has_value() + reader().bytes_popped() + reader().bytes_buffered() + writer().is_closed();
   return ack_no;
 }

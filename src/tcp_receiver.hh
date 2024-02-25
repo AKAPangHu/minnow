@@ -29,7 +29,6 @@ public:
 private:
   Reassembler reassembler_;
   std::optional<Wrap32> syn_seqno_ {};
-  bool fin_flag_ = false;
   bool rst_flag_ = false;
   uint64_t calculate_ackno() const;
   uint64_t calculate_window_size() const;
