@@ -16,17 +16,13 @@ void TCPReceiver::receive( TCPSenderMessage message )
     return;
   };
 
-  // 丢弃不合法的报文，也就是说要保证窗口外的数据是不会被接收的
+  // 丢弃与syn_seqno_相同的seqno，是不合法的
   uint64_t seqno_u64_t = message.seqno.unwrap( syn_seqno_.value(), calculate_ackno() );
 
   if ( !message.SYN ) {
     if ( message.seqno == syn_seqno_ ) {
       return;
     }
-
-//    if ( seqno_u64_t + 1 > calculate_ackno() + calculate_window_size() ) {
-//      return;
-//    }
   }
 
   if ( message.FIN ) {
