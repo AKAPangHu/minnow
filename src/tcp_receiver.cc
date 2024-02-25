@@ -20,7 +20,7 @@ void TCPReceiver::receive( TCPSenderMessage message )
   uint64_t seqno_u64_t = message.seqno.unwrap( syn_seqno_.value(), calculate_ackno() );
 
   if ( !message.SYN ) {
-    if ( seqno_u64_t < calculate_ackno() ) {
+    if ( message.seqno == syn_seqno_ ) {
       return;
     }
 
