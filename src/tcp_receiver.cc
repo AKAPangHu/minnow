@@ -7,8 +7,6 @@ using namespace std;
 void TCPReceiver::receive( TCPSenderMessage message )
 {
 
-
-  
   if ( message.SYN ) {
     syn_seqno_ = message.seqno;
   }
@@ -18,23 +16,24 @@ void TCPReceiver::receive( TCPSenderMessage message )
     return;
   };
 
-  //丢弃不合法的报文，也就是说要保证窗口外的数据是不会被接收的
+  // 丢弃不合法的报文，也就是说要保证窗口外的数据是不会被接收的
   uint64_t seqno_u64_t = message.seqno.unwrap( syn_seqno_.value(), calculate_ackno() );
-  if ( seqno_u64_t < calculate_ackno() ) {
-    return;
-  }
 
-  if ( seqno_u64_t + 1 > calculate_ackno() + calculate_window_size() ) {
-    return;
+  if ( !message.SYN ) {
+    if ( seqno_u64_t < calculate_ackno() ) {
+      return;
+    }
+
+    if ( seqno_u64_t + 1 > calculate_ackno() + calculate_window_size() ) {
+      return;
+    }
   }
 
   if ( message.FIN ) {
     fin_flag_ = true;
   }
 
-  uint64_t now_u64_t = message.seqno.unwrap( syn_seqno_.value(), calculate_ackno()  );
-  reassembler_.insert( now_u64_t == 0 ? 0 : now_u64_t - 1, message.payload, message.FIN );
-
+  reassembler_.insert( seqno_u64_t == 0 ? 0 : seqno_u64_t - 1, message.payload, message.FIN );
 }
 
 TCPReceiverMessage TCPReceiver::send() const
@@ -49,7 +48,7 @@ TCPReceiverMessage TCPReceiver::send() const
 }
 uint64_t TCPReceiver::calculate_window_size() const
 {
-  return writer().available_capacity() > UINT16_MAX ? UINT16_MAX: writer().available_capacity();
+  return writer().available_capacity() > UINT16_MAX ? UINT16_MAX : writer().available_capacity();
 }
 
 uint64_t TCPReceiver::calculate_ackno() const
