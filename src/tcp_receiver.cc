@@ -19,15 +19,15 @@ void TCPReceiver::receive( TCPSenderMessage message )
   // 丢弃不合法的报文，也就是说要保证窗口外的数据是不会被接收的
   uint64_t seqno_u64_t = message.seqno.unwrap( syn_seqno_.value(), calculate_ackno() );
 
-  if ( !message.SYN ) {
-    if ( seqno_u64_t < calculate_ackno() ) {
-      return;
-    }
-
-    if ( seqno_u64_t + 1 > calculate_ackno() + calculate_window_size() ) {
-      return;
-    }
-  }
+//  if ( !message.SYN ) {
+//    if ( seqno_u64_t < calculate_ackno() ) {
+//      return;
+//    }
+//
+//    if ( seqno_u64_t + 1 > calculate_ackno() + calculate_window_size() ) {
+//      return;
+//    }
+//  }
 
   if ( message.FIN ) {
     fin_flag_ = true;
