@@ -18,6 +18,7 @@ static constexpr unsigned NREPS = 64;
 
 void do_test_1( const TCPConfig& cfg, default_random_engine& rd )
 {
+  cout << "doing test 1";
   const Wrap32 rx_isn( rd() );
   TCPReceiverTestHarness test_1 { "non-overlapping out-of-order segments", cfg.recv_capacity };
   test_1.execute( SegmentArrives {}.with_seqno( rx_isn ).with_syn() );
@@ -36,7 +37,9 @@ void do_test_1( const TCPConfig& cfg, default_random_engine& rd )
 
   uint64_t min_expect_ackno = 1;
   uint64_t max_expect_ackno = 1;
+  uint64_t c = 0;
   for ( auto [off, sz] : seq_size ) {
+    cout << "test1: " + to_string(c++);
     test_1.execute( SegmentArrives {}.with_seqno( rx_isn + 1 + off ).with_data( d.substr( off, sz ) ) );
     if ( off + 1 == min_expect_ackno ) {
       min_expect_ackno = min_expect_ackno + sz;
@@ -47,16 +50,20 @@ void do_test_1( const TCPConfig& cfg, default_random_engine& rd )
 
   test_1.execute( BytesPending { 0 } );
   test_1.execute( ReadAll { d } );
+  cout << "finish test 1";
 }
 
 void do_test_2( const TCPConfig& cfg, default_random_engine& rd )
 {
+  cout << "doing test 2";
   const Wrap32 rx_isn( rd() );
   TCPReceiverTestHarness test_2 { "overlapping out-of-order segments", cfg.recv_capacity };
   test_2.execute( SegmentArrives {}.with_seqno( rx_isn ).with_syn() );
   vector<tuple<size_t, size_t>> seq_size;
   size_t datalen = 0;
+  uint64_t c = 0;
   while ( datalen < cfg.recv_capacity ) {
+    cout << "test2-part1: " + to_string(c++);
     const size_t size = min( 1 + ( static_cast<size_t>( rd() ) % ( TCPConfig::MAX_PAYLOAD_SIZE - 1 ) ),
                              cfg.recv_capacity - datalen );
     const size_t rem = TCPConfig::MAX_PAYLOAD_SIZE - size;
@@ -85,7 +92,9 @@ void do_test_2( const TCPConfig& cfg, default_random_engine& rd )
 
   uint64_t min_expect_ackno = 1;
   uint64_t max_expect_ackno = 1;
+  c = 0;
   for ( auto [off, sz] : seq_size ) {
+    cout << "test2-part2: " + to_string(c++);
     test_2.execute( SegmentArrives {}.with_seqno( rx_isn + 1 + off ).with_data( d.substr( off, sz ) ) );
     if ( off + 1 <= min_expect_ackno && off + sz + 1 > min_expect_ackno ) {
       min_expect_ackno = sz + off;
