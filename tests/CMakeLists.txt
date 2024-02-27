@@ -9,10 +9,14 @@ add_custom_target(speed_testing)
 macro(add_test_exec exec_name)
   add_executable("${exec_name}_sanitized" EXCLUDE_FROM_ALL "${exec_name}.cc")
   target_compile_options("${exec_name}_sanitized" PUBLIC ${SANITIZING_FLAGS})
+  target_compile_options("${exec_name}_sanitized" PRIVATE -pg)
+
   target_link_options("${exec_name}_sanitized" PUBLIC ${SANITIZING_FLAGS})
   target_link_libraries("${exec_name}_sanitized" minnow_testing_sanitized)
   target_link_libraries("${exec_name}_sanitized" minnow_sanitized)
   target_link_libraries("${exec_name}_sanitized" util_sanitized)
+  target_link_libraries("${exec_name}_sanitized" -pg)
+
   add_dependencies(functionality_testing "${exec_name}_sanitized")
 
   add_executable("${exec_name}" EXCLUDE_FROM_ALL "${exec_name}.cc")
