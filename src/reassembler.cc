@@ -147,8 +147,7 @@ void Reassembler::check_and_write_from_internal()
     if ( it->first == next_index_ ) {
       data.append( it->second );
       next_index_ += it->second.size();
-      internal_storage_new.erase( it );
-      break;
+      it = internal_storage_new.erase( it );
     } else if ( it->first < next_index_ ) {
       uint64_t it_end_index = it->first + it->second.size() - 1;
       if ( it_end_index >= next_index_ ) {
