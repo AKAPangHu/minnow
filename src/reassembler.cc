@@ -158,7 +158,6 @@ void Reassembler::check_and_write_from_internal()
         break;
       } else {
         it = internal_storage_new.erase( it );
-        ++it;
       }
     } else {
       break;
