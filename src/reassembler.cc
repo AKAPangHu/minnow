@@ -63,6 +63,10 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
 
 void Reassembler::insert_into_internal( uint64_t first_index, const string& data )
 {
+  if ( data.empty() ) {
+    return;
+  }
+
   uint64_t end_index = first_index + data.size() - 1;
 
   for ( auto it = internal_storage_new.begin(); it != internal_storage_new.end(); ) {
