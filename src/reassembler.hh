@@ -2,6 +2,7 @@
 
 #include "byte_stream.hh"
 #include <list>
+#include <map>
 #include <unordered_map>
 #include <utility>
 
@@ -44,16 +45,20 @@ public:
   const Writer& writer() const { return output_.writer(); }
 
 private:
-  ByteStream output_;                                     // the Reassembler writes to this ByteStream
-  uint64_t next_index_ = 0;                               // the index of the next byte to be written
-  std::unordered_map<uint64_t, char> internal_storage {}; // the buffer to store pending bytes
+  ByteStream output_;                                      // the Reassembler writes to this ByteStream
+  uint64_t next_index_ = 0;                                // the index of the next byte to be written
+  std::unordered_map<uint64_t, char> internal_storage {};  // the buffer to store pending bytes
+  std::map<uint64_t, std::string> internal_storage_new {}; // the buffer to store pending bytes
   uint64_t last_index = INT64_MAX;
+
+  static std::pair<uint64_t, std::string> merge( uint64_t old_first_index,
+                                          const std::string& old_string,
+                                          uint64_t new_first_index,
+                                          const std::string& new_string );
 
   void insert_into_internal( uint64_t first_index, const std::string& data );
   void check_and_write_from_internal();
 
   void push_to_writer_stream( const std::string& data, bool is_last_substring );
   bool beyond_capacity( uint64_t end_index );
-
-  void erase_between( uint64_t first_index, uint64_t next_index );
 };
