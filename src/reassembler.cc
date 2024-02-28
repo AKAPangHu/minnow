@@ -97,7 +97,7 @@ void Reassembler::insert_into_internal( uint64_t first_index, string& data )
     }
 
     // 新字符串右侧重叠
-    else if ( first_index >= it->first && end_index >= item_end_index ) {
+    else if ( first_index <= item_end_index && end_index > item_end_index) {
       auto p = merge( first_index, data, it->first, it->second );
       first_index = p.first;
       assert(p.first == it->first);
