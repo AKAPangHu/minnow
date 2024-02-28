@@ -73,7 +73,7 @@ void Reassembler::insert_into_internal( uint64_t first_index, const string& data
 {
   uint64_t index = first_index;
   for ( const auto& item : data ) {
-    internal_storage[index] = item;
+    internal_storage.insert({index, item});
     index++;
   }
 }
