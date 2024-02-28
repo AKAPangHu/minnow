@@ -61,7 +61,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   }
 }
 
-void Reassembler::insert_into_internal( uint64_t first_index, const string& data )
+void Reassembler::insert_into_internal( uint64_t first_index, string& data )
 {
   if ( data.empty() ) {
     return;
@@ -88,7 +88,6 @@ void Reassembler::insert_into_internal( uint64_t first_index, const string& data
 
     // 新字符串包裹住旧字符串，删除旧字符串
     else if ( first_index < it->first && end_index > item_end_index ) {
-      auto p = merge( first_index, data, it->first, it->second );
       it = internal_storage_new.erase( it );
     }
 
@@ -100,7 +99,9 @@ void Reassembler::insert_into_internal( uint64_t first_index, const string& data
     // 新字符串右侧重叠
     else if ( first_index >= it->first && end_index >= item_end_index ) {
       auto p = merge( first_index, data, it->first, it->second );
-      internal_storage_new.insert( it, p );
+      first_index = p.first;
+      assert(p.first == it->first);
+      data = p.second;
       it = internal_storage_new.erase( it );
       ++it;
     }

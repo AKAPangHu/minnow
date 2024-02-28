@@ -5,6 +5,7 @@
 #include <map>
 #include <unordered_map>
 #include <utility>
+#include <cassert>
 
 class Reassembler
 {
@@ -55,7 +56,7 @@ private:
                                           uint64_t new_first_index,
                                           const std::string& new_string );
 
-  void insert_into_internal( uint64_t first_index, const std::string& data );
+  void insert_into_internal( uint64_t first_index, std::string& data );
   void check_and_write_from_internal();
 
   void push_to_writer_stream( const std::string& data, bool is_last_substring );
