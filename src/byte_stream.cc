@@ -13,14 +13,14 @@ void Writer::push( const string& data )
     return;
   }
 
-  for ( auto c : data ) {
-    if ( buffer_.size() >= capacity_ ) {
-      return;
-    }
+  string insertable_data = data.substr( 0, available_capacity() );
 
-    buffer_.push_back( c );
-    pushed_++;
+  if ( insertable_data.empty() ) {
+    return;
   }
+
+  buffer_.insert( buffer_.end(), insertable_data.begin(), insertable_data.end() );
+  pushed_+= insertable_data.size();
 }
 
 void Writer::close()
