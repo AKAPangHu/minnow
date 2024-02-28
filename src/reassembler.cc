@@ -65,13 +65,13 @@ void Reassembler::insert_into_internal( uint64_t first_index, const string& data
 {
   uint64_t end_index = first_index + data.size() - 1;
 
-  for ( auto it = internal_storage_new.begin(); it != internal_storage_new.end(); ++it ) {
+  for ( auto it = internal_storage_new.begin(); it != internal_storage_new.end(); ) {
 
     uint64_t item_end_index = it->first + it->second.size() - 1;
 
     // 处于新字符串左方，继续循环
     if ( first_index < it->first && end_index < it->first ) {
-      continue;
+      ++it;
     }
 
     // 新旧字符串在左侧重叠
@@ -98,11 +98,12 @@ void Reassembler::insert_into_internal( uint64_t first_index, const string& data
       auto p = merge( first_index, data, it->first, it->second );
       internal_storage_new.insert( it, p );
       it = internal_storage_new.erase( it );
+      ++it;
     }
 
     // 新字符串在右侧
     else if ( first_index > item_end_index ) {
-      continue;
+      ++it;
     }
   }
 
