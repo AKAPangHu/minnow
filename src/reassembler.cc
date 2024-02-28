@@ -138,7 +138,7 @@ void Reassembler::check_and_write_from_internal()
 {
   string data;
 
-  for ( auto it = internal_storage_new.begin(); it != internal_storage_new.end(); ++it ) {
+  for ( auto it = internal_storage_new.begin(); it != internal_storage_new.end();) {
     if ( it->first == next_index_ ) {
       data.append( it->second );
       next_index_ += it->second.size();
@@ -150,10 +150,11 @@ void Reassembler::check_and_write_from_internal()
         const basic_string substr = it->second.substr( next_index_ - it->first );
         data.append( substr );
         next_index_ += substr.size();
-        it = internal_storage_new.erase( it );
+        internal_storage_new.erase( it );
         break;
       } else {
         it = internal_storage_new.erase( it );
+        ++it;
       }
     } else {
       break;
