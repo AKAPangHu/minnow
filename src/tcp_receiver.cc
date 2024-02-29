@@ -12,6 +12,7 @@ void TCPReceiver::receive( TCPSenderMessage message )
   }
 
   if ( !syn_seqno_.has_value() ) {
+    reader().set_error();
     rst_flag_ = true;
     return;
   };
