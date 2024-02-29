@@ -79,7 +79,7 @@ void Reassembler::insert_into_internal( uint64_t first_index, string& data )
     }
 
     // 新旧字符串在左侧重叠
-    else if ( first_index <= it->first && end_index <= item_end_index ) {
+    else if ( first_index < it->first && end_index <= item_end_index ) {
       auto p = merge( first_index, data, it->first, it->second );
       internal_storage_new.insert( it, p );
       internal_storage_new.erase( it );
