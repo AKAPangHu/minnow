@@ -125,7 +125,7 @@ std::pair<uint64_t, std::string> Reassembler::merge( uint64_t old_first_index,
 
   uint64_t front_first_index = min( old_first_index, new_first_index );
 
-  if ( old_first_index <= new_first_index && old_end_index >= new_first_index ) {
+  if ( old_first_index <= new_first_index && old_end_index >= new_end_index ) {
     return { old_first_index, old_string };
   } else if ( new_first_index <= old_first_index && new_end_index >= old_end_index ) {
     return { new_first_index, new_string };
