@@ -36,7 +36,7 @@ TCPReceiverMessage TCPReceiver::send() const
   return { TCPReceiverMessage {
     syn_seqno_.has_value() ? make_optional<>( Wrap32::wrap( ack_no, syn_seqno_.value() ) ) : nullopt,
     static_cast<uint16_t>( calculate_window_size() ),
-    rst_flag_ && reader().has_error() && writer().has_error() } };
+    rst_flag_ || reader().has_error() || writer().has_error() } };
 }
 uint64_t TCPReceiver::calculate_window_size() const
 {
