@@ -189,5 +189,9 @@ void Reassembler::push_to_writer_stream( const string& data, bool is_last_substr
 
 uint64_t Reassembler::bytes_pending() const
 {
-  return internal_storage_new.size();
+  uint64_t size = 0;
+  for ( const auto& item : internal_storage_new ) {
+    size += item.second.size();
+  }
+  return size;
 }
