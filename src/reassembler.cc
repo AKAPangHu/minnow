@@ -103,7 +103,6 @@ void Reassembler::insert_into_internal( uint64_t first_index, string& data )
       assert(p.first == it->first);
       data = p.second;
       it = internal_storage_new.erase( it );
-      ++it;
     }
 
     // 新字符串在右侧
