@@ -87,7 +87,7 @@ void Reassembler::insert_into_internal( uint64_t first_index, string& data )
     }
 
     // 新字符串包裹住旧字符串，删除旧字符串
-    else if ( first_index < it->first && end_index > item_end_index ) {
+    else if ( first_index <= it->first && end_index > item_end_index ) {
       it = internal_storage_new.erase( it );
     }
 
