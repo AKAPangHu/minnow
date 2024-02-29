@@ -13,7 +13,6 @@ void TCPReceiver::receive( TCPSenderMessage message )
 
   if ( !syn_seqno_.has_value() ) {
     reader().set_error();
-    rst_flag_ = true;
     return;
   };
 
@@ -37,7 +36,7 @@ TCPReceiverMessage TCPReceiver::send() const
   return { TCPReceiverMessage {
     syn_seqno_.has_value() ? make_optional<>( Wrap32::wrap( ack_no, syn_seqno_.value() ) ) : nullopt,
     static_cast<uint16_t>( calculate_window_size() ),
-    rst_flag_ || reader().has_error() || writer().has_error() } };
+    reader().has_error() || writer().has_error() } };
 }
 uint64_t TCPReceiver::calculate_window_size() const
 {
@@ -46,6 +45,7 @@ uint64_t TCPReceiver::calculate_window_size() const
 
 uint64_t TCPReceiver::calculate_ackno() const
 {
-  uint64_t ack_no = syn_seqno_.has_value() + reader().bytes_popped() + reader().bytes_buffered() + writer().is_closed();
+  uint64_t ack_no
+    = syn_seqno_.has_value() + reader().bytes_popped() + reader().bytes_buffered() + writer().is_closed();
   return ack_no;
 }
